@@ -1,3 +1,30 @@
+local bad_patterns = {
+    -- Disk/System Nukers
+    "rm%s+%-rf%s+/",                     -- Blocks 'rm -rf /'
+    "dd%s+if=.-%s+of=.-/dev/",           -- Blocks 'dd if=/dev/zero of=/dev/sda'
+    "mkfs%.%w+%s+/dev/",                 -- Blocks 'mkfs.ext4 /dev/sda1'
+    "chmod%s+%-R%s+[07]+%s+/",           -- Blocks 'chmod -R 000 /' or '777 /'
+    
+    -- Command Injections
+    "%$%b()",                            -- Blocks $(malicious_command)
+    "`.-`",                              -- Blocks `malicious_command`
+    
+    -- Fork Bombs
+    ":%(%)%s*{:%|:%&};:",                -- Blocks :(){ :|:& };:
+    
+    -- Network Exploits
+    "curl%s+.+%|%s*sh",                  -- Blocks 'curl evil.com | sh'
+    "wget%s+.+%|%s*sh",                  -- Blocks 'wget evil.com | bash'
+    
+    -- Sudo Bypass Attempts
+    "sudo%s+rm",                         -- Blocks 'sudo rm -rf /'
+    "sudo%s+chmod",                      -- Blocks 'sudo chmod -R 000 /'
+    
+    -- Paranoid Extras
+    ">%s*/dev/(sd%a+%|null%|zero)",      -- Blocks '> /dev/sda' or '> /dev/null'
+    "mv%s+.-%/dev/null",                 -- Blocks 'mv file /dev/null'
+    "echo%s+.-%>%s*/etc/",               -- Blocks 'echo bad > /etc/config'
+}
 local newprompt = [[FlowTerm 1.0v1
 copyright© 2025
 powered by: lua 5.4
@@ -11,11 +38,6 @@ type "about" for more info.
 type "help" for help.]]
 print(newprompt)
 
-local premium_key = {
-  "FlowTermFTW8", 
-  "FlowTerm-PRO-40719",
-  "FlowTermDoesntNeedATeam"
-}
 prompt = "FT"
 local is_premium = false
 local function is_termux()
@@ -67,6 +89,13 @@ while true do
     terminal. Thanks Termux team for such your
     wonderful work. FlowTerm PRO is still alpha, please don't buy it.
     -Recuration.]])
+    for _, pattern in ipairs(bad_patterns) do
+  if input:match(pattern) then
+    print("Blocked: unsafe command detected.")
+    input = nil -- prevent running it
+    break
+  end
+    end
   elseif input == "guess" then
     local number = math.random(1, 100)
     local attempts = 5
