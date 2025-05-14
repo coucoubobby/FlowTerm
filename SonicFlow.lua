@@ -26,20 +26,24 @@ local bad_patterns = {
     "echo%s+.-%>%s*/etc/",               -- Blocks 'echo bad > /etc/config'
 }
 local newprompt = [[
-FlowTerm 1.0v1
+SonicFlow 1.0v1
 copyright© 2025
 powered by: lua 5.4
 VSSD: FTV67
-SHSim: FlowTerm
+SHSim: SonicFlow
 copyright© february 2025
-FlowTerm: Made By Recuration
+SonicFlow: Made By Recuration
 DCHANGING: (not available yet.)
-Safe Mode: flowjit
+Safe Mode: FlowJIT
 type "about" for more info.
 type "help" for help.]]
 print(newprompt)
-
-prompt = "FT"
+local premium_key = {
+    "SonicFlowDoesntNeedATeam",
+    "SonicFlow-PRO-2-2025",
+    "SonicFlowUsersAreTheBest"
+}
+prompt = "SF"
 local is_premium = false
 local function is_termux()
   return os.execute("pkg --version /dev/null 2>&1") == 0
@@ -57,17 +61,17 @@ while true do
   if input:match("^pkg") and is_termux() then
     return os.execute("PATH=$PATH && " .. input)
   elseif input == "exit" then
-    print("Exiting. Thanks for using FlowTerm.")
+    print("Exiting. Thanks for using SonicFlow.")
     break
   elseif input == "about" then
     print([[
-    FlowTerm, a brand new terminal
+    SonicFlow, a brand new terminal
     made in 2025 by a 11 year old,
     powered by lua and only 14 lines of code.
     with originally only 4 lines of code,
     this knowledge has been proven
     truly never, ever underestimated.
-    FlowTerm is a android
+    SonicFlow is a android
     linux terminal like termux. used to
     run commands and do stuff. this tool
     shall not be misused, with hacking,
@@ -78,7 +82,7 @@ while true do
     NOT misusing this tool. this tool
     shall not be sold, traded without
     owner consent. contact coucoubobbyetatmosprimebobby@gmail.com for consent. not following the rules
-    should lead to legal consequences.
+    should lead to consequences.
     This tool shall be treated respectfully
     and this tool didn't try copying termux. if termux
     sees this, i don't want any problems.
@@ -92,10 +96,10 @@ while true do
     the hackings ruined it.
     people's should not have had made
     phishing tools, or anything illegal.
-    FlowTerm already does 90% of what termux does,
+    SonicFlow already does 90% of what termux does,
     also Termux inspired me of making my own
     terminal. Thanks Termux team for such your
-    wonderful work. FlowTerm PRO is still alpha, please don't buy it.
+    wonderful work. SonicFlow PRO is still alpha and free.
     -Recuration.]])
   elseif input == "guess" then
     local number = math.random(1, 100)
@@ -122,7 +126,7 @@ while true do
       end
     end
   elseif input == "premium" then
-    print("Enter premium key: ")
+    io.write("Enter premium key: ")
     local key = io.read()
     if key == premium_key[1] or key == premium_key[2] or key == premium_key[3] then
       print("Access granted, you're now premium.")
@@ -134,7 +138,7 @@ while true do
     print([[
     (NOTE: this isn't every command)
     clear --clears terminal
-    setprompt (VIP) --changes the "FT" prompt
+    setprompt (VIP) --changes the "SF" prompt
     premium --gives premium access with keys
     help --shows list of commands
     about --info about terminal
@@ -160,7 +164,7 @@ while true do
   elseif input == "setgreet" and not is_premium then
     print("Premium needed, sorry lil guy.")
   elseif input == "rm -rf /" then 
-    print("Nice try. FlowTerm respects your files, my guy. 💀")
+    print("Nice try. SonicFlow respects your files, my guy. 💀")
   elseif input == "userinfo" then
     print("=== Android User ===")
     os.execute("id")
@@ -168,10 +172,10 @@ while true do
     print("App UID: "..(io.popen("echo $UID"):read("*a")))
   elseif input == "curl ifconfig.me" then
     for i = 1, 1 do
-      prompt = "\nFT"
+      prompt = "\nSF"
       os.execute(input)
       os.execute("sleep 3")
-      prompt = "FT"
+      prompt = "SF"
     end
   elseif input == "whoami" then
     local handle = io.popen("whoami 2>/dev/null")
