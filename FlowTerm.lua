@@ -25,7 +25,8 @@ local bad_patterns = {
     "mv%s+.-%/dev/null",                 -- Blocks 'mv file /dev/null'
     "echo%s+.-%>%s*/etc/",               -- Blocks 'echo bad > /etc/config'
 }
-local newprompt = [[FlowTerm 1.0v1
+local newprompt = [[
+FlowTerm 1.0v1
 copyright© 2025
 powered by: lua 5.4
 VSSD: FTV67
@@ -46,6 +47,13 @@ end
 while true do
   io.write(prompt .. ": ")
   local input = io.read()
+      for _, pattern in ipairs(bad_patterns) do
+  if input:match(pattern) then
+    print("Blocked: unsafe command detected.")
+    input = nil -- prevent running it
+    break
+  end
+    end
   if input:match("^pkg") and is_termux() then
     return os.execute("PATH=$PATH && " .. input)
   elseif input == "exit" then
@@ -89,13 +97,6 @@ while true do
     terminal. Thanks Termux team for such your
     wonderful work. FlowTerm PRO is still alpha, please don't buy it.
     -Recuration.]])
-    for _, pattern in ipairs(bad_patterns) do
-  if input:match(pattern) then
-    print("Blocked: unsafe command detected.")
-    input = nil -- prevent running it
-    break
-  end
-    end
   elseif input == "guess" then
     local number = math.random(1, 100)
     local attempts = 5
